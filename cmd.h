@@ -4,9 +4,10 @@ CRGB leds[NUM_LEDS];
 
 #if defined(__AVR_ATmega32U4__) || defined(ARDUINO_SAMD_ZERO)
 #pragma message "The current development board is ATmega32U4 or SAMD_ZERO"
-#define SerialDevice SerialUSB
 #define LED_PIN A3
-#define PN532_SPI_SS 10 //When 32U4 does not use SPI, executing ReadWithoutEncryption will fail
+// #define PN532_SPI_SS 10 //When 32U4 does not use SPI, executing ReadWithoutEncryption will fail
+#define SerialDevice Serial
+#define PN532_HSU_TOGGLE 1
 
 #elif defined(ARDUINO_ESP8266_NODEMCU_ESP12E)
 #pragma message "Current development board is NODEMCU_ESP12E"
@@ -28,6 +29,12 @@ CRGB leds[NUM_LEDS];
 #include <SPI.h>
 #include <PN532_SPI.h>
 PN532_SPI pn532(SPI, PN532_SPI_SS);
+#elif defined(PN532_HSU_TOGGLE)
+#pragma message "Connect PN532 using HSU"
+#include <PN532_HSU.h>
+#include <PN532.h>
+
+PN532_HSU pn532(Serial1);
 #else
 #include <Wire.h>
 #include <PN532_I2C.h>

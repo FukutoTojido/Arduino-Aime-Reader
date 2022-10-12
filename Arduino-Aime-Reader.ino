@@ -5,19 +5,25 @@ void setup() {
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(50);
   FastLED.showColor(0);
+
+  SerialDevice.begin(high_baudrate ? 115200 : 38400);
+  while (!Serial) {};
+
   nfc.begin();
   while (!nfc.getFirmwareVersion()) {
+    SerialDevice.println("Vai ca loz PN532 dau?");
     FastLED.showColor(0xFF0000);
     delay(500);
     FastLED.showColor(0);
     delay(500);
   }
+
+  SerialDevice.println("m>hieutrung");
   nfc.setPassiveActivationRetries(0x10);//Set wait times
   nfc.SAMConfig();
   memset(&req, 0, sizeof(req.bytes));
   memset(&res, 0, sizeof(res.bytes));
 
-  SerialDevice.begin(high_baudrate ? 115200 : 38400);
   FastLED.showColor(high_baudrate ? 0x0000FF : 0x00FF00);
 }
 
